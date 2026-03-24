@@ -189,7 +189,40 @@
 						playTypingAnimation(typingTexts[0]);
 
 						</script>
+					<!-- Toggle Certificates Script -->
+					<script>
+						/**
+						 * Toggle function to show/hide detailed certificates
+						 * This function handles the visibility and animation of certificate cards
+						 */
+						function toggleCertificates() {
+							// Get the certificates container and button elements
+							const certContainer = document.getElementById('certificatesContainer');
+							const toggleBtn = document.getElementById('toggleCertBtn');
+							const btnText = toggleBtn.querySelector('.btn-text');
 
+							// Check if certificates are currently hidden
+							if (certContainer.classList.contains('hidden')) {
+								// Show certificates
+								certContainer.classList.remove('hidden');
+								btnText.textContent = 'Hide Certificates';
+								toggleBtn.style.background = 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)';
+							} else {
+								// Hide certificates
+								certContainer.classList.add('hidden');
+								btnText.textContent = 'View Certificates';
+								toggleBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+							}
+						}
+
+						// Optional: Add keyboard event listener (press 'C' to toggle certificates)
+						document.addEventListener('keydown', function(e) {
+							// Uncomment below to enable 'C' key toggle
+							// if (e.key === 'c' || e.key === 'C') {
+							//     toggleCertificates();
+							// }
+						});
+					</script>
 						<br>
 						<br>
 			            <h2>BCA Undergraduate | Software Developer</h2>
@@ -368,6 +401,94 @@
             </div>
           </div>
         </div>
+		
+		<!-- Toggle Button Section -->
+		<div class="row justify-content-center mt-5 mb-4">
+			<div class="col-md-10 text-center">
+				<button id="toggleCertBtn" class="btn btn-primary py-2 px-5" onclick="toggleCertificates()">
+					<span class="btn-text">View Certificates</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- Detailed Certificates Section (Initially Hidden) -->
+		<div id="certificatesContainer" class="certificates-container hidden">
+			<div class="row justify-content-center">
+				<div class="col-md-10">
+					<div class="certificates-detailed-grid">
+						
+						<!-- Certificate 1: Python -->
+						<div class="cert-card">
+							<div class="cert-icon">🐍</div>
+							<div class="cert-info">
+								<h4 class="cert-title">Python Programming</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> Coursera</p>
+								<p class="cert-date"><strong>Date:</strong> June 2024</p>
+								<p class="cert-description">Completed comprehensive Python programming course</p>
+							</div>
+						</div>
+
+						<!-- Certificate 2: Nasscom -->
+						<div class="cert-card">
+							<div class="cert-icon">🏢</div>
+							<div class="cert-info">
+								<h4 class="cert-title">Nasscom DSPA</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> NASSCOM</p>
+								<p class="cert-date"><strong>Date:</strong> May 2024</p>
+								<p class="cert-description">Data Science Professional Associate certification</p>
+							</div>
+						</div>
+
+						<!-- Certificate 3: MongoDB -->
+						<div class="cert-card">
+							<div class="cert-icon">🗄️</div>
+							<div class="cert-info">
+								<h4 class="cert-title">MongoDB Developer</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> MongoDB University</p>
+								<p class="cert-date"><strong>Date:</strong> April 2024</p>
+								<p class="cert-description">MongoDB database design and implementation expertise</p>
+							</div>
+						</div>
+
+						<!-- Certificate 4: NodeJS -->
+						<div class="cert-card">
+							<div class="cert-icon">⚙️</div>
+							<div class="cert-info">
+								<h4 class="cert-title">NodeJS Backend Development</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> Udemy</p>
+								<p class="cert-date"><strong>Date:</strong> March 2024</p>
+								<p class="cert-description">Full-stack backend development with Node.js</p>
+							</div>
+						</div>
+
+						<!-- Certificate 5: CSS -->
+						<div class="cert-card">
+							<div class="cert-icon">🎨</div>
+							<div class="cert-info">
+								<h4 class="cert-title">Advanced CSS & Animations</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> freeCodeCamp</p>
+								<p class="cert-date"><strong>Date:</strong> February 2024</p>
+								<p class="cert-description">Modern CSS techniques and responsive design patterns</p>
+							</div>
+						</div>
+
+						<!-- Certificate 6: HTML -->
+						<div class="cert-card">
+							<div class="cert-icon">📄</div>
+							<div class="cert-info">
+								<h4 class="cert-title">HTML5 & Web Standards</h4>
+								<p class="cert-issuer"><strong>Issuer:</strong> W3C Academy</p>
+								<p class="cert-date"><strong>Date:</strong> January 2024</p>
+								<p class="cert-description">Semantic HTML5 and web accessibility standards</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Simple Grid (Original) -->
 		<div class="row justify-content-center mt-5">
 			<div class="col-md-10">
 				<div class="certificates-grid">
