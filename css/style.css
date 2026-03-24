@@ -9865,35 +9865,11 @@ textarea.form-control {
 .cert-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  color: #667eea;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 50%;
-  background: rgba(102, 126, 234, 0.1);
-  line-height: 1;
+  transition: transform 0.3s ease;
 }
 
 .cert-card:hover .cert-icon {
-  transform: scale(1.2) rotate(10deg);
-  color: #fff;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-/* Ensure icons display properly */
-.cert-icon i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transform: scale(1.1) rotate(5deg);
 }
 
 /* Certificate Information */
@@ -10031,27 +10007,13 @@ textarea.form-control {
     gap: 1rem;
   }
   
-  .cert-card {
-    padding: 1.2rem;
-  }
-  
-  .cert-icon {
-    font-size: 2.3rem;
-    width: 60px;
-    height: 60px;
-    margin-bottom: 0.8rem;
+  .cert-card {3rem;
   }
   
   .cert-title {
-    font-size: 1rem;
-  }
-  
-  .cert-issuer, .cert-date, .cert-description {
-    font-size: 0.8rem;
+    font-size: 1.1rem;
+  }5rem;
   }
   
   #toggleCertBtn {
-    width: 100%;
-    font-size: 0.95rem;
-  }
-}
+    width: 100%
