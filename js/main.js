@@ -269,9 +269,41 @@
     fixedContentPos: false
   });
 
-
-
-
+  // Particle background generation
+  function generateParticles() {
+    const container = document.getElementById('particles-container');
+    const particleCount = 50;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle animate';
+      
+      const size = Math.random() * 5 + 3;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      particle.style.left = x + 'px';
+      particle.style.top = y + 'px';
+      
+      const duration = Math.random() * 4 + 6;
+      particle.style.animationDuration = duration + 's';
+      
+      const delay = Math.random() * 2;
+      particle.style.animationDelay = delay + 's';
+      
+      container.appendChild(particle);
+    }
+  }
+  
+  generateParticles();
+  
+  // Regenerate particles on window resize
+  $(window).on('resize', function() {
+    $('#particles-container').empty();
+    generateParticles();
+  });
 
 })(jQuery);
 
