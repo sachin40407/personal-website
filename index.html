@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.4.0/tsparticles.bundle.min.js"></script>
 
 
 <style>
@@ -104,6 +104,17 @@ body {
   overflow-x: hidden;
 }
 
+#tsparticles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: transparent;
+}
+
 #particles-container {
   position: fixed;
   top: 0;
@@ -156,7 +167,7 @@ body {
 
   </head>
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
-	  <div id="particles-container"></div>
+	  <div id="tsparticles"></div>
 	  
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar ftco-navbar-light site-navbar-target" id="ftco-navbar">
 	    <div class="container">
@@ -386,8 +397,35 @@ body {
 	            <p><a href="mailto:sachin40407@gmail.com.in">sachin40407@gmail.com.in</a></p>
 	          </div>
           </div>
+		</div>
 
-		  <div class="container">
+		<!-- Contact Form Section -->
+		<div class="row justify-content-center">
+		  <div class="col-md-8">
+			<div class="ftco-animate">
+			  <h3 class="mb-4 ml-md-0">Send Me a Message</h3>
+			  <form id="contactForm" method="POST" action="#contact-section">
+				<div class="form-group">
+				  <input type="text" class="form-control" id="contact-name" placeholder="Your Name" required>
+				</div>
+				<div class="form-group">
+				  <input type="email" class="form-control" id="contact-email" placeholder="Your Email" required>
+				</div>
+				<div class="form-group">
+				  <input type="text" class="form-control" id="contact-subject" placeholder="Subject" required>
+				</div>
+				<div class="form-group">
+				  <textarea name="Message" id="contact-message" class="form-control" placeholder="Message" rows="7" required></textarea>
+				</div>
+				<div class="form-group">
+				  <button type="submit" class="btn btn-primary py-3 px-5">Submit</button>
+				</div>
+			  </form>
+			</div>
+		  </div>
+		</div>
+
+		<div class="container">
 			<br>
 			<br>
 				<ul class="ftco-footer-social list-unstyled d-flex justify-content-center align-items-center mb-0">
@@ -434,6 +472,146 @@ body {
   <script src="js/scrollax.min.js"></script>
   
   <script src="js/main.js"></script>
+  
+  <!-- Spider Web Particles Script -->
+  <script>
+    tsParticles.load("tsparticles", {
+      particles: {
+        number: {
+          value: 50,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: "#ffbd39"
+        },
+        shape: {
+          type: "circle"
+        },
+        opacity: {
+          value: 0.5,
+          random: true,
+          anim: {
+            enable: true,
+            speed: 1,
+            opacity_min: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3,
+          random: true
+        },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "bounce",
+          bounce: false,
+          attract: {
+            enable: false,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 200,
+          color: "#ffbd39",
+          opacity: 0.4,
+          width: 1.5
+        }
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: {
+            enable: true,
+            mode: "connect"
+          },
+          onclick: {
+            enable: true,
+            mode: "push"
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 400,
+            line_linked: {
+              opacity: 1
+            }
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 1,
+            speed: 3
+          },
+          repulse: {
+            distance: 200
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
+          },
+          connect: {
+            distance: 150,
+            line_linked: {
+              opacity: 1
+            },
+            radius: 60
+          }
+        }
+      },
+      retina_detect: true,
+      background: {
+        color: "transparent"
+      }
+    });
+  </script>
+
+  <!-- Contact Form Handler -->
+  <script>
+    document.getElementById('contactForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        name: document.getElementById('contact-name').value,
+        email: document.getElementById('contact-email').value,
+        subject: document.getElementById('contact-subject').value,
+        message: document.getElementById('contact-message').value
+      };
+      
+      try {
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          alert('Email sent successfully!');
+          this.reset();
+        } else {
+          alert('Error: ' + result.message);
+        }
+      } catch (error) {
+        alert('Error sending email: ' + error.message);
+      }
+    });
+  </script>
     
   </body>
 </html>
