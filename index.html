@@ -651,11 +651,21 @@
       const responseDiv = document.getElementById('responseMessage');
       const submitBtn = document.querySelector('#contactForm button[type="submit"]');
       
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        responseDiv.innerHTML = '<div class="alert alert-warning">Please enter a valid email address</div>';
+        return;
+      }
+      
       // Disable submit button and show loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Sending...';
+      responseDiv.innerHTML = '';
       
       try {
+        console.log('Attempting to send message...');
+        
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: {
@@ -664,25 +674,45 @@
           body: JSON.stringify({ name, email, message })
         });
         
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
         
         if (response.ok) {
-          responseDiv.innerHTML = '<div class="alert alert-success">Message sent successfully! We\'ll get back to you soon.</div>';
+          responseDiv.innerHTML = '<div class="alert alert-success"><strong>✅ Success!</strong> Message sent successfully. I will reply within 24 hours.</div>';
           document.getElementById('contactForm').reset();
           submitBtn.disabled = false;
           submitBtn.innerHTML = 'Send Message';
-          // Clear message after 5 seconds
+          // Clear message after 6 seconds
           setTimeout(() => {
             responseDiv.innerHTML = '';
-          }, 5000);
+          }, 6000);
         } else {
-          responseDiv.innerHTML = '<div class="alert alert-danger">Error: ' + (data.message || 'Failed to send message') + '</div>';
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = 'Send Message';
+          throw new Error(data.message || 'Failed to send message');
         }
       } catch (error) {
-        console.error('Error:', error);
-        responseDiv.innerHTML = '<div class="alert alert-danger">Error sending message. Please check your internet connection and try again, or contact directly at sachin40407@gmail.com</div>';
+        console.error('Error details:', error);
+        
+        // Provide helpful error message
+        let errorMsg = 'Error sending message via server. ';
+        
+        if (error.message.includes('Failed to fetch')) {
+          errorMsg += 'Server may not be running. Try refreshing the page.';
+        } else if (error.message.includes('timeout')) {
+          errorMsg += 'Request took too long. Check your internet connection.';
+        } else {
+          errorMsg += error.message;
+        }
+        
+        // Show fallback option
+        const fallbackEmail = 'sachin40407@gmail.com';
+        const subject = 'Contact from Portfolio';
+        const body = 'Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message;
+        const mailtoLink = 'mailto:' + fallbackEmail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        
+        errorMsg += '<br><br><strong>📧 Fallback Option:</strong><br><a href="' + mailtoLink + '" class="btn btn-sm btn-info mt-2">Send via Gmail Instead</a>';
+        
+        responseDiv.innerHTML = '<div class="alert alert-danger">' + errorMsg + '</div>';
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Send Message';
       }
