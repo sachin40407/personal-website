@@ -10,15 +10,24 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
 
-// Configure Nodemailer transporter
+// Check if environment variables are set
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  console.error('ERROR: EMAIL_USER or EMAIL_PASSWORD not set in .env file');
+  console.error('Please configure your .env file with valid Gmail credentials');
+}
+
+// Configure Nodemailer transporter with better error handling
 const transporter = nodemailer.createTransport({
   service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
@@ -28,9 +37,13 @@ const transporter = nodemailer.createTransport({
 // Verify transporter connection
 transporter.verify((error, success) => {
   if (error) {
-    console.log('Email configuration error:', error);
+    console.error('❌ Email configuration error:', error.message);
+    console.error('Make sure you have:');
+    console.error('1. Set EMAIL_USER and EMAIL_PASSWORD in .env');
+    console.error('2. Enabled 2-Factor Authentication on your Gmail');
+    console.error('3. Generated an App Password (not your regular password)');
   } else {
-    console.log('Email service ready');
+    console.log('✅ Email service ready - Messages can be sent');
   }
 });
 
@@ -101,10 +114,24 @@ app.post('/api/contact', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('❌ Email sending error:', error.message);
+    console.error('Error details:', error);
+    
+    // Provide helpful error message
+    let userMessage = 'Failed to send message. Please try again later.';
+    
+    if (error.message.includes('Invalid login') || error.message.includes('Bad credentials')) {
+      userMessage = 'Email service configuration error. Please contact the site owner.';
+      console.error('⚠️ Check your EMAIL_USER and EMAIL_PASSWORD in .env file');
+    } else if (error.message.includes('ECONNREFUSED')) {
+      userMessage = 'Server connection error. Please check your internet and try again.';
+    } else if (error.message.includes('timeout')) {
+      userMessage = 'Request timeout. Please try again.';
+    }
+    
     res.status(500).json({ 
       success: false, 
-      message: 'Failed to send message. Please try again later.' 
+      message: userMessage 
     });
   }
 });
@@ -132,6 +159,23 @@ app.use((err, req, res, next) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-  console.log('Make sure to configure the .env file with your email credentials');
+  console.log('\n╔════════════════════════════════════════════════════════╗');
+  console.log('║                  Portfolio Server Started               ║');
+  console.log('╚════════════════════════════════════════════════════════╝');
+  console.log(`\n✅ Server running at http://localhost:${PORT}`);
+  console.log('\n📧 Email Configuration:');
+  
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+    console.log(`   EMAIL_USER: ${process.env.EMAIL_USER}`);
+    console.log(`   RECIPIENT_EMAIL: ${process.env.RECIPIENT_EMAIL}`);
+    console.log('   Status: ✅ Configured');
+  } else {
+    console.error('   Status: ❌ NOT CONFIGURED');
+    console.error('   Please set EMAIL_USER and EMAIL_PASSWORD in .env file');
+  }
+  
+  console.log('\n📝 Testing the contact form:');
+  console.log('   Open http://localhost:${PORT} in your browser');
+  console.log('   Fill in and submit the contact form');
+  console.log('\n');
 });

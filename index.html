@@ -489,13 +489,9 @@
 			<br>
 			<br>
 					<ul class="ftco-footer-social list-unstyled d-flex justify-content-center align-items-center mb-0">
-					  <li class="ftco-animate normal-txt">Find me on </li>
-					  <!-- <li class="ftco-animate"><a href="https://www.youtube.com/@RishabhMishraOfficial"><span class="icon-youtube"></span></a></li> -->
-					  <li class="ftco-animate"><a href="https://www.linkedin.com/in/deekshith-k-gowda-8b5a07289"><span class="icon-linkedin"></span></a></li>  
-					  <!-- <li class="ftco-animate"><a href="https://twitter.com/rishabhnmishra"><span class="icon-twitter"></span></a></li>
-					  <li class="ftco-animate"><a href="https://twitter.com/rishabhnmishra"><span class="icon-facebook"></span></a></li>
-				      <li class="ftco-animate"><a href="https://www.instagram.com/rishabhnmishra/"><span class="icon-instagram"></span></a></li> -->
-					  <li class="ftco-animate"><a href="https://github.com/DeekshithKGowda"><span class="icon-github"></span></a></li>  
+					  <li class="ftco-animate normal-txt">Connect with me </li>
+					  <li class="ftco-animate"><a href="https://www.linkedin.com/in/b-sachin-702748382?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><span class="icon-linkedin"></span></a></li>
+					  <li class="ftco-animate"><a href="https://www.instagram.com/__.twilight.__soul_?igsh=MXd5cWx0MHF6MWo2ag==" target="_blank"><span class="icon-instagram"></span></a></li>
 					</ul>
 				<br>
 		   </div>
@@ -653,6 +649,11 @@
       const email = document.getElementById('email').value;
       const message = document.getElementById('message').value;
       const responseDiv = document.getElementById('responseMessage');
+      const submitBtn = document.querySelector('#contactForm button[type="submit"]');
+      
+      // Disable submit button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Sending...';
       
       try {
         const response = await fetch('/api/contact', {
@@ -666,14 +667,24 @@
         const data = await response.json();
         
         if (response.ok) {
-          responseDiv.innerHTML = '<div class="alert alert-success">Message sent successfully!</div>';
+          responseDiv.innerHTML = '<div class="alert alert-success">Message sent successfully! We\'ll get back to you soon.</div>';
           document.getElementById('contactForm').reset();
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Send Message';
+          // Clear message after 5 seconds
+          setTimeout(() => {
+            responseDiv.innerHTML = '';
+          }, 5000);
         } else {
-          responseDiv.innerHTML = '<div class="alert alert-danger">Error: ' + data.message + '</div>';
+          responseDiv.innerHTML = '<div class="alert alert-danger">Error: ' + (data.message || 'Failed to send message') + '</div>';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Send Message';
         }
       } catch (error) {
-        responseDiv.innerHTML = '<div class="alert alert-danger">Error sending message. Please try again.</div>';
         console.error('Error:', error);
+        responseDiv.innerHTML = '<div class="alert alert-danger">Error sending message. Please check your internet connection and try again, or contact directly at sachin40407@gmail.com</div>';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Send Message';
       }
     });
   </script>
